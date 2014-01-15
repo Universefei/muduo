@@ -21,6 +21,10 @@ namespace muduo
 namespace FileUtil
 {
 
+/******************************************************************************
+ *                            class SmallFile                                 *
+ *****************************************************************************/
+
   class SmallFile : boost::noncopyable
   {
    public:

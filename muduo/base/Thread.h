@@ -20,6 +20,7 @@ namespace muduo
 class Thread : boost::noncopyable
 {
  public:
+    //  fei: typedef in class declaration?
   typedef boost::function<void ()> ThreadFunc;
 
   explicit Thread(const ThreadFunc&, const string& name = string());

@@ -7,6 +7,10 @@
 namespace muduo
 {
 
+/******************************************************************************
+ *                            class Logger                                    *
+ *****************************************************************************/
+
 class Logger
 {
  public:
@@ -21,6 +25,9 @@ class Logger
     NUM_LOG_LEVELS,
   };
 
+/*---------------------------------------------------------------------------*/
+/*                            InnerClass SourceFile                          */
+/*---------------------------------------------------------------------------*/
   // compile time calculation of basename of source file
   class SourceFile
   {
@@ -52,6 +59,7 @@ class Logger
     const char* data_;
     int size_;
   };
+/*----- -----------------------------------------------------------------*/
 
   Logger(SourceFile file, int line);
   Logger(SourceFile file, int line, LogLevel level);
@@ -70,25 +78,30 @@ class Logger
   static void setFlush(FlushFunc);
 
  private:
+/*---------------------------------------------------------------------------*/
+/*                              InnerClass Impl                              */
+/*---------------------------------------------------------------------------*/
+  class Impl
+  {
+   public:
+    typedef Logger::LogLevel LogLevel;
+    Impl(LogLevel level, int old_errno, const SourceFile& file, int line);
+    void formatTime();
+    void finish();
 
-class Impl
-{
- public:
-  typedef Logger::LogLevel LogLevel;
-  Impl(LogLevel level, int old_errno, const SourceFile& file, int line);
-  void formatTime();
-  void finish();
-
-  Timestamp time_;
-  LogStream stream_;
-  LogLevel level_;
-  int line_;
-  SourceFile basename_;
-};
+    Timestamp time_;
+    LogStream stream_;
+    LogLevel level_;
+    int line_;
+    SourceFile basename_;
+  };
+/*----- -----------------------------------------------------------------*/
 
   Impl impl_;
 
 };
+/*****************************************************************************/
+
 
 extern Logger::LogLevel g_logLevel;
 

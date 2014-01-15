@@ -14,6 +14,9 @@
 namespace muduo
 {
 
+/******************************************************************************
+ *                             Class MutexLock                                *
+ *****************************************************************************/
 class MutexLock : boost::noncopyable
 {
  public:
@@ -63,6 +66,9 @@ class MutexLock : boost::noncopyable
  private:
   friend class Condition;
 
+/*---------------------------------------------------------------------------*/
+/*                            Class UnassignGuard                            */
+/*---------------------------------------------------------------------------*/
   class UnassignGuard : boost::noncopyable
   {
    public:
@@ -95,6 +101,9 @@ class MutexLock : boost::noncopyable
   pid_t holder_;
 };
 
+/******************************************************************************
+ *                              Class MutexLockGuard                          *
+ *****************************************************************************/
 class MutexLockGuard : boost::noncopyable
 {
  public:

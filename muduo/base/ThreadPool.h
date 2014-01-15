@@ -20,9 +20,14 @@
 namespace muduo
 {
 
+/******************************************************************************
+ *                           Class ThreadPool                                 *
+ *****************************************************************************/
+
 class ThreadPool : boost::noncopyable
 {
  public:
+  // fei: typedef in function definition?
   typedef boost::function<void ()> Task;
 
   explicit ThreadPool(const string& name = string());

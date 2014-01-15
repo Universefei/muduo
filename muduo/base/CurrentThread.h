@@ -36,7 +36,7 @@ namespace CurrentThread
   }
 
   bool isMainThread();
-}
-}
+}  //  namespace CurrentThread
+}  //  namespace muduo
 
 #endif

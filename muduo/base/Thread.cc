@@ -28,16 +28,18 @@ namespace CurrentThread
   __thread const char* t_threadName = "unknown";
   const bool sameType = boost::is_same<int, pid_t>::value;
   BOOST_STATIC_ASSERT(sameType);
-}
+}  //  namespace CurrentThread
 
 namespace detail
 {
 
+/*----- gettid() -------------------------------------------------------------*/
 pid_t gettid()
 {
   return static_cast<pid_t>(::syscall(SYS_gettid));
 }
 
+/*----- afterFork()-----------------------------------------------------------*/
 void afterFork()
 {
   muduo::CurrentThread::t_cachedTid = 0;
@@ -45,6 +47,10 @@ void afterFork()
   CurrentThread::tid();
   // no need to call pthread_atfork(NULL, NULL, &afterFork);
 }
+
+/******************************************************************************
+ *                       Class ThreadNameInitializer                          *
+ *****************************************************************************/
 
 class ThreadNameInitializer
 {
@@ -58,6 +64,10 @@ class ThreadNameInitializer
 };
 
 ThreadNameInitializer init;
+
+/******************************************************************************
+ *                       Struct ThreadData                                    *
+ *****************************************************************************/
 
 struct ThreadData
 {
@@ -115,6 +125,7 @@ struct ThreadData
   }
 };
 
+/*----- startThread() -------------------------------------------------------*/
 void* startThread(void* obj)
 {
   ThreadData* data = static_cast<ThreadData*>(obj);
@@ -123,10 +134,16 @@ void* startThread(void* obj)
   return NULL;
 }
 
-}
-}
+}  // namespace detail
+}  // namespace muduo
 
 using namespace muduo;
+
+/******************************************************************************
+ *                                                                            *
+ *                   namespace CurrentThread operation definition             *
+ *                                                                            *
+ *****************************************************************************/
 
 void CurrentThread::cacheTid()
 {
@@ -134,17 +151,23 @@ void CurrentThread::cacheTid()
   {
     t_cachedTid = detail::gettid();
     int n = snprintf(t_tidString, sizeof t_tidString, "%5d ", t_cachedTid);
-    assert(n == 6); (void) n;
+    assert(n == 6); (void) n;  // (void) n ? what?
   }
 }
 
 bool CurrentThread::isMainThread()
 {
-  return tid() == ::getpid();
+  return tid() == ::getpid();  
+  // fei:the way to judege a thread is a main thread
 }
 
-AtomicInt32 Thread::numCreated_;
+AtomicInt32 Thread::numCreated_; // fei: what this for?
 
+/*---------------------------------------------------------------------------*/
+/*                                                                           */
+/*                    class Thread member definition                         */
+/*                                                                           */
+/*---------------------------------------------------------------------------*/
 Thread::Thread(const ThreadFunc& func, const string& n)
   : started_(false),
     joined_(false),
@@ -156,6 +179,7 @@ Thread::Thread(const ThreadFunc& func, const string& n)
   numCreated_.increment();
 }
 
+/*----- -----------------------------------------------------------------*/
 Thread::~Thread()
 {
   if (started_ && !joined_)
@@ -164,6 +188,7 @@ Thread::~Thread()
   }
 }
 
+/*----- -----------------------------------------------------------------*/
 void Thread::start()
 {
   assert(!started_);
@@ -177,6 +202,7 @@ void Thread::start()
   }
 }
 
+/*----- -----------------------------------------------------------------*/
 int Thread::join()
 {
   assert(started_);

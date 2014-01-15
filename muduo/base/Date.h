@@ -34,7 +34,7 @@ class Date : public muduo::copyable
   };
 
   static const int kDaysPerWeek = 7;
-  static const int kJulianDayOf1970_01_01;
+  static const int kJulianDayOf1970_01_01;/// fei: what this for with const not initialized?
 
   ///
   /// Constucts an invalid Date.

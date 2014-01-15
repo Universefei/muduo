@@ -38,7 +38,6 @@ class ThreadLocal : boost::noncopyable
   }
 
  private:
-
   static void destructor(void *x)
   {
     T* obj = static_cast<T*>(x);
@@ -51,5 +50,5 @@ class ThreadLocal : boost::noncopyable
   pthread_key_t pkey_;
 };
 
-}
+} // namespace muduo
 #endif
